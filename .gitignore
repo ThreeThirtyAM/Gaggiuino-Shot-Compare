@@ -1,0 +1,15 @@
+# .gitignore
+
+# Python bytecode
+__pycache__/
+*.pyc
+
+# Virtual environment (if you use one)
+venv/
+*/venv/
+.venv/
+
+# PyInstaller build artifacts
+build/
+dist/
+*.spec

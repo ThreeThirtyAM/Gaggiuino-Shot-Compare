@@ -1,0 +1,354 @@
+/* =====================================================================================
+// Gaggiuino Shot Compare - Stylesheet (style.css)
+// =====================================================================================
+// This file contains all the CSS styles for the application. It uses CSS variables
+// for easy theming (light and dark modes) and defines the layout and appearance
+// of all components.
+// ===================================================================================== */
+
+
+/* --- CSS Variables (Theming) --- */
+/* These variables define the color palette for the application. */
+:root {
+  /* -- Light Mode Color Palette (Default) -- */
+  --sidebar-width: 350px;
+  --background-color: #f8f9fa;
+  --sidebar-background: #ffffff;
+  --card-background: #ffffff;
+  --header-background: #f8f8f8;
+  --text-primary: #333;
+  --text-secondary: #666;
+  --border-color: #ddd;
+  --border-light: #eee;
+  --primary-color: #ef4e2b;
+  --hover-color: #d64425;
+  --danger-color: #e74c3c;
+  --icon-hover-color: #333;
+  --button-disabled-bg: #95a5a6;
+}
+
+/* When the body has the 'dark-mode' class, these variable values will override the defaults. */
+body.dark-mode {
+  /* -- Dark Mode Color Palette -- */
+  --background-color: #212529;
+  --sidebar-background: #1a1a1a;
+  --card-background: #2c2c2c;
+  --header-background: #343a40;
+  --text-primary: #f8f9fa;
+  --text-secondary: #adb5bd;
+  --border-color: #495057;
+  --border-light: #343a40;
+  --icon-hover-color: #f8f9fa;
+  --button-disabled-bg: #5c6769;
+}
+
+
+/* --- Global Styles --- */
+body {
+  font-family: 'Segoe UI', Arial, sans-serif;
+  margin: 0;
+  padding: 0;
+  color: var(--text-primary);
+  background: var(--background-color);
+  display: flex; /* Use flexbox for the main layout (sidebar | content) */
+  height: 100vh; /* Make the body take up the full viewport height */
+  overflow: hidden; /* Prevent the body itself from scrolling */
+  transition: background-color 0.2s, color 0.2s; /* Smooth theme transitions */
+}
+
+
+/* --- Layout Components --- */
+
+.sidebar {
+  width: var(--sidebar-width); /* Initial width, can be resized */
+  background: var(--sidebar-background);
+  border-right: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column; /* Stack children vertically */
+  height: 100vh;
+  min-width: 220px; /* Prevent it from becoming too narrow */
+  flex-shrink: 0; /* Prevent the sidebar from shrinking when window is small */
+}
+
+.resizer {
+  width: 5px;
+  background: var(--header-background);
+  cursor: col-resize; /* Show the column-resize cursor on hover */
+  height: 100vh;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+
+.resizer:hover {
+  background: var(--border-color); /* Highlight on hover */
+}
+
+
+/* --- Sidebar Components --- */
+
+.sidebar-header {
+  padding: 15px;
+  border-bottom: 1px solid var(--border-light);
+}
+
+.sidebar-header h2 {
+  margin: 0;
+  font-size: 1.2em;
+  color: var(--primary-color);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* Styles for the Theme Toggle Icon */
+#theme-toggle-icon {
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 2px;
+}
+
+#theme-toggle-icon svg {
+  width: 24px;
+  height: 24px;
+  fill: var(--text-secondary); /* Use a secondary color for the icon */
+  transition: fill 0.2s;
+}
+
+#theme-toggle-icon:hover svg {
+  fill: var(--icon-hover-color); /* Change color on hover */
+}
+
+.search-controls {
+  padding: 10px 15px;
+  display: flex;
+  flex-direction: column;
+  border-bottom: 1px solid var(--border-light);
+  gap: 5px;
+}
+
+#profile-filter {
+  width: 100%;
+  box-sizing: border-box; /* Include padding and border in the element's total width */
+  padding: 8px;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  font-size: 0.9em;
+  background-color: var(--card-background);
+  color: var(--text-primary);
+}
+
+#profile-filter::placeholder {
+  color: var(--text-secondary);
+}
+
+.filter-container {
+  position: relative; /* Needed for positioning the clear button inside */
+  display: flex;
+  align-items: center;
+}
+
+#clear-filter-btn {
+  position: absolute; /* Position relative to the parent .filter-container */
+  right: 8px;
+  top: 50%;
+  transform: translateY(-50%); /* Vertically center the button */
+  background: none;
+  border: none;
+  color: #999;
+  cursor: pointer;
+  font-size: 1.4em;
+  padding: 0 4px;
+  display: none; /* Hidden by default, shown by JavaScript */
+}
+
+#clear-filter-btn:hover {
+  color: var(--text-primary);
+}
+
+#feedback-area {
+  height: 15px;
+  font-size: 0.85em;
+  text-align: center;
+  font-weight: 500;
+  color: var(--danger-color); /* Use a distinct color for feedback/errors */
+}
+
+.load-more-container {
+  padding: 10px 15px 15px 15px;
+  border-top: 1px solid var(--border-light);
+}
+
+.load-more {
+  width: 100%;
+  padding: 10px;
+  background: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 0.9em;
+  transition: background 0.2s;
+}
+
+.load-more:hover:not(:disabled) {
+  background: var(--hover-color);
+}
+
+.load-more:disabled {
+  background: var(--button-disabled-bg);
+  cursor: not-allowed;
+}
+
+.shot-list {
+  flex-grow: 1; /* Allow this element to grow and fill available vertical space */
+  overflow-y: auto; /* Show a scrollbar if the content overflows */
+}
+
+.shot-list .loading {
+  padding: 20px;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+
+/* --- Shot List Item Styling --- */
+
+.shot-item {
+  display: flex;
+  align-items: center;
+  padding: 10px 15px;
+  border-bottom: 1px solid var(--border-light);
+  cursor: pointer;
+  transition: background 0.2s;
+}
+
+.shot-item:hover {
+  background: var(--header-background);
+}
+
+.shot-checkbox {
+  margin-right: 10px;
+}
+
+.shot-info {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.shot-details-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.shot-details-header {
+  font-weight: bold;
+  font-size: 0.95em;
+}
+
+.shot-details-header .shot-profile {
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+.shot-details-meta {
+  font-size: 0.85em;
+  color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+
+/* --- Main Content and Charts --- */
+
+.main-content {
+  flex-grow: 1; /* Allow this area to fill the remaining horizontal space */
+  overflow-y: auto;
+  padding: 10px;
+}
+
+.charts-container {
+  display: grid; /* Use grid layout for the charts */
+  grid-template-columns: 1fr; /* Each chart takes up one full-width column */
+  gap: 10px;
+}
+
+.chart-card {
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  overflow: hidden; /* Ensures content respects the border-radius */
+  background: var(--card-background);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+}
+
+.chart-header {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  background: var(--header-background);
+  border-bottom: 1px solid var(--border-light);
+  gap: 10px;
+  flex-wrap: wrap; /* Allow items to wrap to the next line on small screens */
+}
+
+.chart-header .shot-id {
+  font-weight: bold;
+  color: var(--text-primary);
+}
+
+.chart-header .profile-name {
+  font-weight: 500;
+  font-size: 0.9em;
+}
+
+.chart-header .shot-date {
+  color: var(--text-secondary);
+  font-size: 0.85em;
+  margin-left: auto; /* Pushes the date to the far right */
+}
+
+.close-btn {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 1.2em;
+  cursor: pointer;
+  padding: 0 5px;
+}
+
+.close-btn:hover {
+  color: var(--danger-color);
+}
+
+.chart-container {
+  height: 265px;
+  padding: 10px;
+}
+
+
+/* --- Custom Scrollbar Styling for Dark Mode --- */
+/* This targets WebKit browsers (Chrome, Edge, Safari) for a better dark mode experience. */
+
+body.dark-mode ::-webkit-scrollbar {
+  width: 12px;
+}
+
+body.dark-mode ::-webkit-scrollbar-track {
+  background: var(--sidebar-background); /* Dark background for the scrollbar track */
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb {
+  background-color: var(--border-color); /* A lighter gray for the draggable part */
+  border-radius: 6px;
+  border: 3px solid var(--sidebar-background); /* Creates a padding effect around the thumb */
+}
+
+body.dark-mode ::-webkit-scrollbar-thumb:hover {
+  background-color: var(--text-secondary); /* Make it slightly brighter on hover */
+}

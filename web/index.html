@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Gaggiuino Shot Compare</title>
+  <meta charset="UTF-8">
+
+  <!-- Link to the external CSS stylesheet -->
+  <link rel="stylesheet" href="style.css">
+  
+  <!-- Eel's special JavaScript file. This MUST be included for Python/JS communication. -->
+  <script src="/eel.js"></script>
+  
+  <!-- Include the Chart.js library from a CDN for creating graphs. -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+  <!-- The sidebar contains the list of shots and control elements. -->
+  <div class="sidebar">
+    
+    <!-- Header section of the sidebar. -->
+    <div class="sidebar-header">
+      <h2>
+		    <!-- This span will hold the light/dark mode theme toggle icon. JavaScript will insert an SVG here. -->
+		    <span id="theme-toggle-icon"></span>
+		    <!-- Main application title -->
+		    Gaggiuino Shot Compare
+	    </h2>
+    </div>
+
+    <!-- Container for search and filter controls. -->
+    <div class="search-controls">
+      <div class="filter-container">
+        <input type="text" id="profile-filter" placeholder="Filter by profile name...">
+        <button id="clear-filter-btn" title="Clear filter">×</button>
+      </div>
+      <!-- This div is used to show temporary feedback messages, like errors. -->
+      <div id="feedback-area"></div>
+    </div>
+    
+    <!-- This div will be populated by JavaScript with the list of recent shots. -->
+    <div class="shot-list" id="shot-list">
+      <!-- Shot list will be rendered here by JavaScript -->
+    </div>
+
+  </div>
+
+  <!-- A small, draggable vertical bar that allows resizing the sidebar. -->
+  <div class="resizer" id="resizer"></div>
+
+  <!-- The main content area where the shot charts will be displayed. -->
+  <div class="main-content">
+    
+    <!-- This container will be populated by JavaScript with the selected shot charts. -->
+    <div class="charts-container" id="chart-area">
+      <!-- Charts will be rendered here by JavaScript -->
+    </div>
+
+  </div>
+
+  <!-- Link to our main application logic JavaScript file. -->
+  <script src="script.js"></script>
+</body>
+</html>
