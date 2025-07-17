@@ -1,13 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Gaggiuino Shot Compare Project</title>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <!-- SEO Meta Tags -->
+    <title>Gaggiuino Shot Compare | Local Espresso Shot Analysis</title>
 	<meta name="google-site-verification" content="3bBle6qyeNup-sBLJV42SkO0LEu5id53UG-oVfv-pnw" />
-  </head>
-  <body>
-    <h1>Gaggiuino Shot Compare Project</h1>
-    <p>Welcome to the Gaggiuino Shot Compare project!</p>
-    <p>Source code is available on <a href="https://github.com/ThreeThirtyAM/Gaggiuino-Shot-Compare">GitHub</a>.</p>
-  </body>
+    <meta name="description" content="A free, local desktop app to view, chart, and compare espresso shots from your Gaggiuino. Analyze pressure, flow, and temperature side-by-side. No cloud required.">
+    <meta name="keywords" content="Gaggiuino, espresso, shot compare, data analysis, pressure profiling, coffee, local, desktop app, gaggiuino github">
+    <meta name="author" content="ThreeThirtyAM">
+    
+    <!-- Open Graph / Social Media -->
+    <meta property="og:title" content="Gaggiuino Shot Compare">
+    <meta property="og:description" content="A free, local desktop app to analyze and compare your Gaggiuino espresso shots.">
+    <meta property="og:image" content="https://raw.githubusercontent.com/ThreeThirtyAM/Gaggiuino-Shot-Compare/main/screenshot.png">
+    <meta property="og:url" content="https://threethirtyam.github.io/Gaggiuino-Shot-Compare/">
+    <meta property="og:type" content="website">
+
+    <style>
+        /* --- Self-Contained CSS - No Extra Files Needed! --- */
+        :root {
+            --bg-color: #1e1e1e;
+            --text-color: #e0e0e0;
+            /* --primary-color: #d2a679; /* Old Brown */
+            --primary-color: #ef4e2b; /* New Orange */
+            --card-bg-color: #2a2a2a;
+            --border-color: #444;
+            --link-color: #ffffff;
+            --link-hover-color: #ef4e2b; /* New Orange */
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        header {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        header h1 {
+            font-size: 3rem;
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        header p {
+            font-size: 1.25rem;
+            color: var(--text-color);
+        }
+
+        .cta-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 30px 0;
+            flex-wrap: wrap; /* Added for better responsiveness */
+        }
+
+        .button {
+            display: inline-block;
+            padding: 12px 25px;
+            text-decoration: none;
+            border-radius: 8px;
+            font-weight: bold;
+            transition: transform 0.2s ease, background-color 0.2s ease;
+        }
+
+        .button-primary {
+            background-color: var(--primary-color);
+            color: #1e1e1e; /* Text color for the primary button */
+        }
+        
+        .button-primary:hover {
+            background-color: #d84221; /* A slightly darker orange for hover */
+            transform: translateY(-2px);
+        }
+
+        .button-secondary {
+            background-color: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-color);
+        }
+        
+        .button-secondary:hover {
+            background-color: var(--card-bg-color);
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .screenshot {
+            text-align: center;
+            margin: 40px 0;
+        }
+
+        .screenshot img {
+            max-width: 100%;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .features {
+            background-color: var(--card-bg-color);
+            border-radius: 12px;
+            padding: 40px;
+            margin-top: 50px;
+        }
+
+        .features h2 {
+            text-align: center;
+            margin-top: 0;
+            font-size: 2rem;
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: 30px;
+        }
+
+        .feature-item {
+            padding: 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+        
+        .feature-item h3 {
+            margin-top: 0;
+            color: var(--primary-color);
+        }
+
+        .philosophy, .for-devs {
+            text-align: center;
+            padding: 40px 20px;
+            margin-top: 30px;
+        }
+        
+        .philosophy h2, .for-devs h2 {
+            font-size: 2rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            margin-top: 40px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: var(--link-color);
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: var(--link-hover-color);
+            text-decoration: underline;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <header>
+            <h1>Gaggiuino Shot Compare</h1>
+            <p>Welcome to the Gaggiuino Shot Compare project! Analyse your espresso shots, locally.</p>
+        </header>
+
+        <div class="cta-buttons">
+            <a href="https://github.com/threethirtyam/gaggiuino-shot-compare/releases" class="button button-primary">Download for Windows</a>
+            <a href="https://github.com/threethirtyam/gaggiuino-shot-compare" class="button button-secondary">View on GitHub</a>
+        </div>
+
+        <div class="screenshot">
+            <img src="https://raw.githubusercontent.com/ThreeThirtyAM/Gaggiuino-Shot-Compare/main/screenshot.png" alt="Screenshot of the Gaggiuino Shot Compare application showing three espresso shots compared side-by-side on interactive charts.">
+        </div>
+
+        <section class="features">
+            <h2>Why Use Gaggiuino Shot Compare?</h2>
+            <div class="features-grid">
+                <div class="feature-item">
+                    <h3>📈 Compare Multiple Shots</h3>
+                    <p>Display up to 3 shots side-by-side to analyse consistency and the impact of different profiles.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>💻 Simple for Everyone</h3>
+                    <p>Get started instantly on Windows with a single executable file. No command line or technical setup needed!</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🌐 100% Local</h3>
+                    <p>Runs entirely on your local network. No internet connection required.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>🎨 Light & Dark Modes</h3>
+                    <p>Switch between a light or dark interface with a single click. Your preference is saved automatically for next time.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="philosophy">
+             <h2>Built for the Community</h2>
+             <p>This project started from a simple need: a straightforward way to compare my espresso shots without relying on external services. It was brought to life with a clear set of requirements and the help of AI, and is now shared with the Gaggiuino community in the hope that it's useful to you too.</p>
+        </section>
+
+        <section class="for-devs">
+            <h2>For Developers & macOS/Linux Users</h2>
+            <p>If you're comfortable with the command line, you can run this project from source. Full instructions are available in the README file on the GitHub repository.</p>
+            <div class="cta-buttons">
+                 <a href="https://github.com/threethirtyam/gaggiuino-shot-compare#from-source-for-developers-macos-and-linux-users" class="button button-secondary">Source Instructions</a>
+            </div>
+        </section>
+
+        <footer>
+            <p>A project by <a href="https://github.com/ThreeThirtyAM">ThreeThirtyAM</a></p>
+        </footer>
+    </div>
+
+</body>
 </html>
