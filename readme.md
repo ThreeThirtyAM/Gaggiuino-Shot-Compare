@@ -16,12 +16,12 @@ This was built for personal use, but is shared here in case it's useful to other
 
 ## Key Features
 
--   📈 **Compare Multiple Shots:** Display up to 3 shots side-by-side to analyse consistency and the impact of different profiles.
--   📊 **Interactive Charts:** Plots all key metrics like pressure, flow, temperature, and weight. Toggle data series on/off by clicking the legend.
--   💻 **Easy for Everyone:** Includes a simple executable for Windows users—no command line needed!
--   🌐 **Local First:** Runs entirely on your computer and local network. No cloud services or internet connection required (after initial setup).
--   🔍 **Shot List Filter:** Quickly find shots by filtering the list by profile name.
--   🎨 **Light & Dark Modes:** Includes a theme toggle to switch between a light or dark interface, with your preference saved locally.
+📈 **Compare Multiple Shots:** Display up to 3 shots side-by-side to analyse consistency and the impact of different profiles.
+📊 **Interactive Charts:** Plots all key metrics like pressure, flow, temperature, and weight. Toggle data series on/off by clicking the legend.
+💻 **Easy for Everyone:** Includes a simple executable for Windows users, no command line needed!
+🌐 **Local First:** Runs entirely on your computer and local network. No cloud services or internet connection required (after initial setup).
+🔍 **Shot List Filter:** Quickly find shots by filtering the list by profile name.
+🎨 **Light & Dark Modes:** Includes a theme toggle to switch between a light or dark interface, with your preference saved locally.
 
 ## Tech Stack
 
