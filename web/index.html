@@ -21,8 +21,8 @@
     <!-- Header section of the sidebar. -->
     <div class="sidebar-header">
       <h2>
-		    <!-- This span will hold the light/dark mode theme toggle icon. JavaScript will insert an SVG here. -->
-		    <span id="theme-toggle-icon"></span>
+		    <!-- Settings button. -->
+		    <span id="settings-btn" title="Open Settings"></span>
 		    <!-- Main application title -->
 		    Gaggiuino Shot Compare
 	    </h2>
@@ -58,7 +58,41 @@
 
   </div>
 
-  <!-- Link to our main application logic JavaScript file. -->
+  <!-- Settings overlay section -->
+  <div id="settings-overlay" class="settings-overlay hidden">
+    <div class="settings-panel">
+      <div class="settings-header">
+        <h2>Settings</h2>
+        <button id="settings-close-btn" class="close-btn" title="Close Settings">×</button>
+      </div>
+      <div class="settings-content">
+        <!-- 1. Dark/Light mode toggle -->
+        <div class="setting-item">
+          <label for="theme-toggle-switch">Dark Mode</label>
+          <label class="switch">
+            <input type="checkbox" id="theme-toggle-switch">
+            <span class="slider round"></span>
+          </label>
+        </div>
+        <!-- 2. Gaggiuino URL input -->
+        <div class="setting-item">
+          <label for="gaggiuino-url-input">Gaggiuino URL or IP</label>
+          <input type="text" id="gaggiuino-url-input" class="settings-input" placeholder="http://gaggiuino.local">
+        </div>
+        <!-- 3. Max charts input -->
+        <div class="setting-item">
+          <label for="max-charts-input">Max Comparison Charts</label>
+          <input type="number" id="max-charts-input" class="settings-input" min="1" max="10">
+        </div>
+      </div>
+      <div class="settings-footer">
+        <div id="settings-feedback" class="settings-feedback"></div>
+        <button id="settings-save-btn" class="settings-save-btn">Save & Close</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Link to main application logic JavaScript file. -->
   <script src="script.js"></script>
 </body>
 </html>

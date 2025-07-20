@@ -26,7 +26,7 @@ eel.init('web')
 class CoffeeMachineAPI:
     """
     A dedicated class to handle all communication with the Gaggiuino API.
-    This keeps the API logic organized and separate from the web server logic.
+    This keeps the API logic organised and separate from the web server logic.
     """
     def __init__(self, base_url="http://gaggiuino.local", timeout=5):
         """
@@ -135,31 +135,15 @@ class CoffeeMachineAPI:
     def get_recent_shots(self, limit=15):
         """
         Gets a summary of recent shots by fetching them one by one, backwards from the latest.
-        
-        NOTE: This makes one request per shot, which can be slow. This is a limitation
-              of the device's API if no bulk endpoint exists.
-              
-        Args:
-            limit (int): The maximum number of recent shots to fetch.
-        
-        Returns:
-            list: A list of dictionaries, where each dictionary is a shot summary.
-        
-        Raises:
-            Exception: If getting the latest shot ID fails.
         """
         try:
-            # First, find out where to start counting down from.
             latest_id = self.get_latest_shot_id()
             recent_shots = []
             current_id = latest_id
             
-            # Loop backwards from the latest ID until we have enough shots or we reach ID 0.
             while current_id > 0 and len(recent_shots) < limit:
                 try:
-                    # For each ID, get the full shot data.
                     shot_data = self.get_shot_data(current_id)
-                    # Create a smaller summary dictionary to send to the frontend for the list view.
                     recent_shots.append({
                         "id": shot_data["id"],
                         "profile_name": shot_data["profile_name"],
@@ -168,41 +152,46 @@ class CoffeeMachineAPI:
                         "duration_formatted": shot_data["duration_formatted"]
                     })
                 except Exception as e:
-                    # If a single shot fails to load, we print an error and continue to the next one.
                     print(f"Skipping shot {current_id}: {e}")
                 current_id -= 1
             return recent_shots
         except Exception as e:
-            # This catches errors from the initial get_latest_shot_id call.
             print(f"Error getting recent shots: {str(e)}")
-            # Re-raise the exception so the frontend knows about the failure.
             raise e
 
-# Create a single instance of our API class to be used by the Eel functions.
+# Create a single, persistent instance of the API class.
+# This instance will live for the duration of the application, allowing it
+# to reuse network connections for much better performance.
 coffee_api = CoffeeMachineAPI()
 
 
 # --- Eel Exposed Functions ---
-# Functions decorated with '@eel.expose' can be called directly from JavaScript.
 
+# New function exposed to JavaScript.
+# This allows the frontend to update the URL of our single API instance.
+@eel.expose
+def update_gaggiuino_url(new_url):
+    """Updates the base URL on the persistent API instance."""
+    print(f"Gaggiuino URL updated to: {new_url}")
+    coffee_api.base_url = new_url
+    # We could also re-initialise the session if headers/auth needed to change.
+    # For a simple URL change, this is sufficient.
+
+
+# This function uses the global `coffee_api` instance.
 @eel.expose
 def get_shot_by_id(shot_id):
-    """
-    Exposes the get_shot_data method to JavaScript.
-    It wraps the result in a dictionary to indicate success or failure.
-    """
+    """Exposes the get_shot_data method to JavaScript."""
     try:
         shot_data = coffee_api.get_shot_data(shot_id)
         return {"success": True, "data": shot_data}
     except Exception as e:
         return {"success": False, "error": str(e)}
 
+# This function also uses the global `coffee_api` instance.
 @eel.expose
 def get_recent_shots(limit=15):
-    """
-    Exposes the get_recent_shots method to JavaScript.
-    Also wraps the result in a dictionary to indicate success or failure.
-    """
+    """Exposes the get_recent_shots method to JavaScript."""
     try:
         shots = coffee_api.get_recent_shots(limit)
         return {"success": True, "data": shots}
@@ -212,6 +201,4 @@ def get_recent_shots(limit=15):
 # --- Application Start ---
 
 print("Starting Gaggiuino Shot Compare...")
-# Start the Eel application. This opens a window showing 'index.html'.
-# The Python script will continue to run in the background, handling API calls.
 eel.start('index.html', size=(1200, 800), position=(100, 100))

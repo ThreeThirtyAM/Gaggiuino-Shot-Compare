@@ -1,6 +1,6 @@
 # .gitignore
 
-# Python byte code
+# Python bytecode
 __pycache__/
 *.pyc
 

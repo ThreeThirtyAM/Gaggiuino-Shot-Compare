@@ -21,7 +21,7 @@ This was built for personal use, but is shared here in case it's useful to other
 - 💻 **Easy for Everyone:** Includes a simple executable for Windows users, no command line needed!
 - 🌐 **Local First:** Runs entirely on your computer and local network. No cloud services or internet connection required (after initial setup).
 - 🔍 **Shot List Filter:** Quickly find shots by filtering the list by profile name.
-- 🎨 **Light & Dark Modes:** Includes a theme toggle to switch between a light or dark interface, with your preference saved locally.
+- 🎨 **Customisation:** Settings for light or dark interface themes, set target Gaggiuino address and more.
 
 ## Tech Stack
 
@@ -35,10 +35,10 @@ There are two ways to run this application.
 
 ### The Easy Way (for Windows Users)
 
-This is the recommended method for most users on Windows. No technical setup required!
+This is the recommended method for most users on Windows. No installation, no technical setup!
 
 1.  Go to the [**Releases Page**](https://github.com/threethirtyam/gaggiuino-shot-compare/releases).
-2.  Download the latest `.exe` file (e.g., `gsc_v1_0.exe`).
+2.  Download the latest `.exe` file (e.g., `gsc_v1_1.exe`).
 3.  Double-click the downloaded file to run it. That's it!
 
 ---
@@ -72,13 +72,15 @@ This method is for users who are comfortable with the command line or are not on
 
    **Connection Error / No Shots Found:**
 		Ensure your Gaggiuino is powered on and successfully connected to the same WiFi network as your computer.
-		Try navigating to `http://gaggiuino.local` in your web browser. If it doesn't load, you may need to find your machine's IP address and edit the `base_url` in `main.py` (if running from source).
-		The app can only display shots that have already been pulled and saved on the machine.
+		Try navigating to `http://gaggiuino.local` in your web browser. If your machine uses something other than the Gaggiuino default URL, you need to update the app settings.
+		The app can only display shots that have already been saved on the machine's SD card.
 
 ## Project Philosophy
 
 This project started from a simple need: I wanted to compare my espresso shots side-by-side, locally, and couldn't find a readymade solution.
 
-So, I made this. Well truthfully, I wrote some requirements and chat made it. I can't take credit - I just told chat what to do and made sure my requirements were met - after quite some iterations.
+So, I made this. Well truthfully, I wrote some requirements and chat made it. I can't take credit - I just told chat what to do and made sure my requirements were met. But after quite some iterations, it worked out pretty well.
 
-I put it here in case it is also useful to someone else.
+Testing: I made this for me. It is robust in my environment. It's a simple app, but YMMV!
+
+I'm open to suggestions for improvements - find me on the Gaggiuino Discord.
