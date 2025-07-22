@@ -7,7 +7,7 @@
     <!-- SEO Meta Tags -->
     <title>Gaggiuino Shot Compare | Local Espresso Shot Analysis</title>
 	<meta name="google-site-verification" content="3bBle6qyeNup-sBLJV42SkO0LEu5id53UG-oVfv-pnw" />
-    <meta name="description" content="A local desktop app to view, chart, and compare espresso shots from your Gaggiuino. Analyse pressure, flow, and temperature side-by-side. No cloud required.">
+    <meta name="description" content="A local desktop app to view, chart, and compare espresso shots from your Gaggiuino. Analyse pressure, flow, and temperature side-by-side with synchronized time axes. No cloud required.">
     <meta name="keywords" content="Gaggiuino, espresso, shot compare, data analysis, pressure profiling, coffee, local, desktop app, gaggiuino github">
     <meta name="author" content="ThreeThirtyAM">
     
@@ -19,208 +19,320 @@
     <meta property="og:type" content="website">
 
     <style>
+	
+        /* ==========================================================================
+           1. GLOBAL STYLES & CSS VARIABLES
+           ========================================================================== */
         :root {
-            --bg-color: #1e1e1e;
-            --text-color: #e0e0e0;
-            --primary-color: #ef4e2b;
-            --card-bg-color: #2a2a2a;
-            --border-color: #444;
-            --link-color: #ffffff;
-            --link-hover-color: #ef4e2b;
+		  --bg-color: #1e1e1e;
+		  --text-color: #e0e0e0;
+		  --primary-color: #ef4e2b;
+		  --card-bg-color: #2a2a2a;
+		  --border-color: #444;
+		  --link-color: #ffffff;
+		  --link-hover-color: #ef4e2b;
+		  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+		}
+
+		body {
+		  font-family: var(--font-sans);
+		  margin: 0;
+		  padding: 0;
+		  background-color: var(--bg-color);
+		  color: var(--text-color);
+		  line-height: 1.6;
+		  font-size: 16px; /* Establish a base font size */
+		}
+        
+        /* ==========================================================================
+           2. LAYOUT & VERTICAL RHYTHM
+           ========================================================================== */
+		.container {
+		  max-width: 900px;
+		  margin: 0 auto;
+		  padding: 40px 20px;
+		}
+
+        /*
+         * The "Lobotomized Owl" selector (* + *).
+         * This is the key to consistent vertical spacing. It selects every direct
+         * child of .container that is preceded by another element and adds
+         * a top margin. This prevents a margin on the very first element.
+        */
+        .container > * + * {
+            margin-top: 4rem; /* 64px at a 16px base font size */
+        }
+        
+		/* Exception to above rule for reduced margin abive screenshot */
+		.header-actions + .screenshot {
+			margin-top: 2.5rem;
+		}
+				
+        /* ==========================================================================
+           3. TYPOGRAPHY
+           ========================================================================== */
+		h1, h2, h3 {
+            line-height: 1.2; /* Tighter line-height for headings */
         }
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
+		h1 {
+		  font-size: 3rem;
+		  margin: 0 0 0.5rem 0;
+		  color: var(--primary-color);
+		}
+
+        h2 {
+          font-size: 2rem;
+          margin-top: 0;
+          text-align: center;
         }
 
-        .container {
-            max-width: 900px;
-            margin: 0 auto;
-            padding: 20px;
+        h3 {
+          margin-top: 0;
+		  color: var(--primary-color);
         }
 
-        header {
-            text-align: center;
-            padding: 40px 20px;
-        }
+		header {
+		  text-align: center;
+		}
 
-        header h1 {
-            font-size: 3rem;
-            margin: 0;
-            color: var(--primary-color);
-        }
+		header p {
+		  font-size: 1.25rem;
+          max-width: 75ch;
+          margin-left: auto;
+          margin-right: auto;
+		}
 
-        header p {
-            font-size: 1.25rem;
-            color: var(--text-color);
-        }
-
-        .cta-buttons {
+        /* ==========================================================================
+           4. COMPONENTS (Buttons, Cards, etc.)
+           ========================================================================== */
+        
+        /* --- Call-to-Action (CTA) Section --- */
+        .header-actions {
             display: flex;
-            justify-content: center;
-            gap: 15px;
-            margin: 30px 0;
-            flex-wrap: wrap; 
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem; /* Space between buttons and the note */
         }
 
-        .button {
-            display: inline-block;
-            padding: 12px 25px;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-            transition: transform 0.2s ease, background-color 0.2s ease;
-        }
+ 		.cta-buttons {
+		  display: flex;
+		  justify-content: center;
+		  gap: 15px;
+		  flex-wrap: wrap;
+		}
 
-        .button-primary {
-            background-color: var(--primary-color);
-            color: #1e1e1e; /* Text color for the primary button */
-        }
+		.os-note {						
+		  text-align: center;
+		  font-size: 0.9rem;
+		  color: #aaa;
+          margin: 0;
+		}
         
-        .button-primary:hover {
-            background-color: #d84221; /* A slightly darker orange for hover */
-            transform: translateY(-2px);
-        }
+        /* --- Buttons --- */
+		.button {
+		  display: inline-block;
+		  padding: 12px 25px;
+		  text-decoration: none;
+		  border-radius: 8px;
+		  font-weight: bold;
+          text-align: center;
+		  transition: transform 0.2s ease, background-color 0.2s ease, border-color 0.2s ease;
+		}
 
-        .button-secondary {
-            background-color: transparent;
-            border: 2px solid var(--border-color);
-            color: var(--text-color);
-        }
+		.button-primary {
+		  background-color: var(--primary-color);
+		  color: #1e1e1e;
+          border: 2px solid var(--primary-color);
+		}
+
+		.button-primary:hover {
+		  background-color: #d84221;
+          border-color: #d84221;
+		  transform: translateY(-2px);					   
+		}
+
+		.button-secondary {
+		  background-color: transparent;
+		  border: 2px solid var(--border-color);
+		  color: var(--text-color);		  
+		}
+
+		.button-secondary:hover {
+		  background-color: var(--card-bg-color);
+		  border-color: var(--primary-color);
+		  transform: translateY(-2px);
+		}
+
+        /* --- Screenshot --- */
+		.screenshot img {
+		  max-width: 100%;
+		  height: auto;
+		  border-radius: 8px;
+		  border: 1px solid var(--border-color);
+		  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+		  cursor: pointer;
+		  transition: transform 0.2s ease, box-shadow 0.2s ease;
+		  display: block;
+		  margin: 0 auto;
+		}
+
+		.screenshot img:hover {
+		  transform: scale(1.02);
+		  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.7);
+		}
         
-        .button-secondary:hover {
-            background-color: var(--card-bg-color);
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
+        /* --- Features Section --- */
+		.features {
+		  background-color: var(--card-bg-color);
+		  border-radius: 12px;
+		  padding: 40px;
+		}
+
+		.features-grid {
+		  display: grid;
+		  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+		  gap: 30px;
+		  margin-top: 30px;
+		}
+
+		.feature-item {
+		  padding: 20px;
+		  border: 1px solid var(--border-color);
+		  border-radius: 8px;
+		}
+
+        /* --- Content Sections (Philosophy, For-Devs) --- */
+		.philosophy,
+		.for-devs {
+		  text-align: center;
+		}
+
+        .philosophy p,
+        .for-devs p {
+            max-width: 65ch;
+            margin-left: auto;
+            margin-right: auto;
         }
 
-        .screenshot {
-            text-align: center;
-            margin: 40px 0;
-        }
+        /* ==========================================================================
+           5. FOOTER
+           ========================================================================== */
+		footer {
+		  text-align: center;
+		  padding: 20px;
+		  border-top: 1px solid var(--border-color);
+		  font-size: 0.9rem;
+          /* This removes the extra margin-top from the container's rule */
+          margin-top: 4rem; 
+		}
 
-        .screenshot img {
-            max-width: 100%;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            /* Added for lightbox */
-            cursor: pointer;
-            transition: transform 0.2s ease, box-shadow 0.2s ease;
-        }
+		footer a {
+		  color: var(--link-color);
+		  text-decoration: none;
+		}
 
-        .screenshot img:hover {
-            transform: scale(1.02);
-            box-shadow: 0 15px 40px rgba(0,0,0,0.7);
-        }
+		footer a:hover {
+		  color: var(--link-hover-color);
+		  text-decoration: underline;
+		}
+				
+        /* ==========================================================================
+           6. MODAL LIGHTBOX
+           ========================================================================== */
+		.modal {
+		  display: none;
+		  position: fixed;
+		  z-index: 1000;
+		  left: 0;
+		  top: 0;
+		  width: 100%;
+		  height: 100%;
+		  background-color: rgba(0, 0, 0, 0.85);
+		  animation: fadeIn 0.3s;
+		}
 
-        .features {
-            background-color: var(--card-bg-color);
-            border-radius: 12px;
-            padding: 40px;
-            margin-top: 50px;
-        }
+		.modal-content {
+		  display: block;
+		  margin: auto;
+		  position: absolute;
+		  top: 50%;
+		  left: 50%;
+		  transform: translate(-50%, -50%);
+		  max-width: 90%;
+		  max-height: 90vh;
+		}
 
-        .features h2 {
-            text-align: center;
-            margin-top: 0;
-            font-size: 2rem;
-        }
+		.close-button {
+		  position: absolute;
+		  top: 20px;
+		  right: 35px;
+		  color: #fff;
+		  font-size: 40px;
+		  font-weight: bold;
+		  transition: 0.3s;
+		  cursor: pointer;
+		}
 
-        .features-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 30px;
-            margin-top: 30px;
-        }
-
-        .feature-item {
-            padding: 20px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-        }
-        
-        .feature-item h3 {
-            margin-top: 0;
-            color: var(--primary-color);
-        }
-
-        .philosophy, .for-devs {
-            text-align: center;
-            padding: 40px 20px;
-            margin-top: 30px;
-        }
-        
-        .philosophy h2, .for-devs h2 {
-            font-size: 2rem;
-        }
-
-        footer {
-            text-align: center;
-            padding: 20px;
-            margin-top: 40px;
-            border-top: 1px solid var(--border-color);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: var(--link-color);
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            color: var(--link-hover-color);
-            text-decoration: underline;
-        }
-        
-        /* Styles for the Modal Lightbox - ADDED */
-        .modal {
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0,0,0,0.85);
-            animation: fadeIn 0.3s;
-        }
-
-        .modal-content {
-            display: block;
-            margin: auto;
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            max-width: 90%;
-            max-height: 90vh;
-        }
-        
-        .close-button {
-            position: absolute;
-            top: 20px;
-            right: 35px;
-            color: #fff;
-            font-size: 40px;
-            font-weight: bold;
-            transition: 0.3s;
-            cursor: pointer;
-        }
-
-        .close-button:hover {
-            color: #bbb;
-        }
+		.close-button:hover {
+		  color: #bbb;
+		}
 
         @keyframes fadeIn {
             from {opacity: 0;}
             to {opacity: 1;}
         }
+		
+	   /* ==========================================================================
+          7. RESPONSIVE DESIGN (Mobile-first-ish adjustments)
+          ========================================================================== */
+		@media (max-width: 768px) {
+		  .container {
+			padding: 30px 15px;
+		  }
+          /* Reduce vertical spacing on smaller screens */
+          .container > * + * {
+            margin-top: 3rem;
+          }
+
+		  h1 {
+			font-size: 2.4rem;
+		  }
+		  header p {
+			font-size: 1.1rem;
+		  }
+		  h2 {
+			font-size: 1.75rem;
+		  }
+
+		  .features {
+			padding: 30px 20px;
+		  }
+
+		  .features-grid {
+			grid-template-columns: 1fr; /* Stack features on top of each other */
+			gap: 20px;
+		  }
+
+		  .cta-buttons {
+			flex-direction: column;
+            width: 100%;
+            max-width: 350px; /* Stop buttons from being excessively wide */
+		  }
+		}
+
+		@media (max-width: 480px) {
+		  h1 {
+			font-size: 2.1rem;
+		  }
+		  h2 {
+			font-size: 1.6rem;
+		  }
+		  .button {
+			padding: 12px 20px; /* Make tap targets a bit bigger */
+			font-size: 1rem;
+		  }
+		}
     </style>
 </head>
 <body>
@@ -231,14 +343,17 @@
             <p>Welcome to the Gaggiuino Shot Compare project! Analyse your espresso shots, locally.</p>
         </header>
 
-        <div class="cta-buttons">
-            <a href="https://github.com/threethirtyam/gaggiuino-shot-compare/releases" class="button button-primary">Download for Windows</a>
-            <a href="https://github.com/threethirtyam/gaggiuino-shot-compare" class="button button-secondary">View on GitHub</a>
+        <!-- Wrapped the CTAs and note in a div for better spacing control -->
+        <div class="header-actions">
+            <div class="cta-buttons">
+                <a href="https://github.com/threethirtyam/gaggiuino-shot-compare/releases" class="button button-primary">Download for Windows</a>
+                <a href="https://github.com/threethirtyam/gaggiuino-shot-compare" class="button button-secondary">View on GitHub</a>
+            </div>
+            <p class="os-note">macOS & Linux users, please see the "For Developers" section below.</p>
         </div>
 
         <div class="screenshot">
-            <!-- Added ID for javascript to target -->
-            <img id="screenshot-thumb" src="https://raw.githubusercontent.com/ThreeThirtyAM/Gaggiuino-Shot-Compare/main/screenshot.png" alt="Screenshot of the Gaggiuino Shot Compare application showing three espresso shots compared side-by-side on interactive charts.">
+            <img id="screenshot-thumb" src="https://raw.githubusercontent.com/ThreeThirtyAM/Gaggiuino-Shot-Compare/main/screenshot.png" alt="Screenshot of the Gaggiuino Shot Compare application showing espresso shots compared side-by-side on interactive charts with a synchronized time axis.">
         </div>
 
         <section class="features">
@@ -246,19 +361,27 @@
             <div class="features-grid">
                 <div class="feature-item">
                     <h3>📈 Compare Multiple Shots</h3>
-                    <p>Display up to 3 shots side-by-side to analyse consistency and the impact of different profiles.</p>
+                    <p>Display your shots side-by-side to analyse consistency and the impact of different profiles. The number of charts is configurable in settings.</p>
+                </div>
+				<div class="feature-item">
+                    <h3>📊 Synchronized Time Axis</h3>
+                    <p>All charts now share the same time scale, making it easy to spot differences in each phase as well as total shot time.</p>
+                </div>
+                <div class="feature-item">
+                    <h3>⚙️ Flexible Configuration</h3>
+                    <p>Use the settings panel to change the target address of your Gaggiuino, set the max number of comparison charts, and switch themes.</p>
                 </div>
                 <div class="feature-item">
                     <h3>💻 Simple for Everyone</h3>
-                    <p>Get started instantly on Windows with a single executable file. No command line or technical setup needed!</p>
+                    <p>Get started instantly on Windows with a single executable file. No installation or command line needed!</p>
                 </div>
                 <div class="feature-item">
                     <h3>🌐 100% Local</h3>
-                    <p>Runs entirely on your local network. No internet connection required.</p>
+                    <p>Runs entirely on your local network, communicating directly with your Gaggiuino. No internet connection or cloud service required.</p>
                 </div>
                 <div class="feature-item">
                     <h3>🎨 Light & Dark Modes</h3>
-                    <p>Switch between a light or dark interface with a single click. Your preference is saved automatically for next time.</p>
+                    <p>Switch between a light or dark interface from settings. Your preference is saved automatically for next time.</p>
                 </div>
             </div>
         </section>
@@ -288,11 +411,11 @@
     </div>
 
     <script>
-        // --- JavaScript for Lightbox -->
+        // --- JavaScript for Lightbox (no changes needed here) -->
         const modal = document.getElementById("screenshot-modal");
         const thumb = document.getElementById("screenshot-thumb");
         const modalImg = document.getElementById("modal-image");
-        const closeBtn = document.getElementsByClassName("close-button")[0];
+        const closeBtn = document.querySelector(".close-button");
 
         thumb.onclick = function() {
             modal.style.display = "block";
@@ -309,10 +432,18 @@
 
         // Close when the dark background is clicked
         modal.onclick = function(event) {
+            // Only close if the click is on the modal background itself, not the image
             if (event.target === modal) {
                 closeModal();
             }
         };
+
+        // Close the modal with the Escape key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                closeModal();
+            }
+        });
     </script>
 
 </body>
