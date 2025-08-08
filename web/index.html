@@ -1,44 +1,80 @@
 <!DOCTYPE html>
+<!--
+=====================================================================================
+// Gaggiuino Shot Compare - Main HTML Structure (index.html)
+//====================================================================================
+// This file defines the complete DOM structure of the application. It includes
+// containers for the sidebar, chart display area, and settings panel, which
+// are populated and managed by script.js.
+//====================================================================================
+-->
 <html>
 <head>
   <title>Gaggiuino Shot Compare</title>
   <meta charset="UTF-8">
 
+  <!-- Favicon for browser & taskbar -->
+  <link rel="icon" href="/icon.png" type="image/png">
+
   <!-- Link to the external CSS stylesheet -->
   <link rel="stylesheet" href="style.css">
-  
+
   <!-- Eel's special JavaScript file. This MUST be included for Python/JS communication. -->
   <script src="/eel.js"></script>
-  
-  <!-- Include the Chart.js library from a CDN for creating graphs. -->
-  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <!-- Include the Chart.js library for creating graphs. -->
+  <script src="chart.js"></script>
 </head>
 <body>
 
-  <!-- The sidebar contains the list of shots and control elements. -->
+  <!-- ====================================================== -->
+  <!--               Sidebar & Controls                       -->
+  <!-- ====================================================== -->
   <div class="sidebar">
-    
-    <!-- Header section of the sidebar. -->
+
+    <!-- Header section of the sidebar -->
     <div class="sidebar-header">
       <h2>
-		    <!-- Settings button. -->
-		    <span id="settings-btn" title="Open Settings"></span>
-		    <!-- Main application title -->
-		    Gaggiuino Shot Compare
-	    </h2>
+        <!-- Settings button -->
+        <span id="settings-btn" title="Open Settings"></span>
+        <!-- Main application title -->
+        Gaggiuino Shot Compare
+      </h2>
     </div>
 
-    <!-- Container for search and filter controls. -->
+    <!-- Container for search, filter, and view controls -->
     <div class="search-controls">
-      <div class="filter-container">
-        <input type="text" id="profile-filter" placeholder="Filter by profile name...">
-        <button id="clear-filter-btn" title="Clear filter">×</button>
+      <!-- Main toolbar for view selection and triggering the filter -->
+      <div class="sidebar-toolbar" id="sidebar-toolbar">
+        <button id="show-recents-btn" class="toolbar-btn active" title="Show recent shots">
+          <!-- Icon will be inserted by JS -->
+          <span>Recents</span>
+        </button>
+        <button id="show-favorites-btn" class="toolbar-btn" title="Show favorite shots">
+          <!-- Icon will be inserted by JS -->
+          <span>Favourites</span>
+        </button>
+        <button id="show-filter-btn" class="toolbar-btn icon-btn" title="Filter shots">
+          <!-- Icon will be inserted by JS -->
+        </button>
       </div>
-      <!-- This div is used to show temporary feedback messages, like errors. -->
+
+      <!-- View for the filter input, hidden by default -->
+      <div class="filter-view" id="filter-view" style="display: none;">
+        <button id="hide-filter-btn" class="toolbar-btn icon-btn" title="Back to shot list">
+            <!-- Icon will be inserted by JS -->
+        </button>
+        <div class="filter-container">
+          <input type="text" id="profile-filter" placeholder="Filter by profile name...">
+          <button id="clear-filter-btn" title="Clear filter">×</button>
+        </div>
+      </div>
+
+      <!-- This div shows temporary feedback messages, like errors or status updates. -->
       <div id="feedback-area"></div>
     </div>
-    
-    <!-- This div will be populated by JavaScript with the list of recent shots. -->
+
+    <!-- This div will be populated by JavaScript with the list of shots. -->
     <div class="shot-list" id="shot-list">
       <!-- Shot list will be rendered here by JavaScript -->
     </div>
@@ -48,9 +84,12 @@
   <!-- A small, draggable vertical bar that allows resizing the sidebar. -->
   <div class="resizer" id="resizer"></div>
 
-  <!-- The main content area where the shot charts will be displayed. -->
+
+  <!-- ====================================================== -->
+  <!--               Main Content Area                        -->
+  <!-- ====================================================== -->
   <div class="main-content">
-    
+
     <!-- This container will be populated by JavaScript with the selected shot charts. -->
     <div class="charts-container" id="chart-area">
       <!-- Charts will be rendered here by JavaScript -->
@@ -58,17 +97,22 @@
 
   </div>
 
-  <!-- Settings overlay section -->
+
+  <!-- ====================================================== -->
+  <!--               Settings Overlay                       -->
+  <!-- ====================================================== -->
   <div id="settings-overlay" class="settings-overlay hidden">
     <div class="settings-panel">
+      <!-- Settings Panel Header -->
       <div class="settings-header">
         <h2>Settings</h2>
         <button id="settings-close-btn" class="close-btn" title="Close Settings">×</button>
       </div>
+      <!-- Settings Panel Content -->
       <div class="settings-content">
         <!-- 1. Dark/Light mode toggle -->
         <div class="setting-item">
-          <label for="theme-toggle-switch">Dark Mode</label>
+          <label for="theme-toggle-switch" title="Light side is ok too!">Dark Mode</label>
           <label class="switch">
             <input type="checkbox" id="theme-toggle-switch">
             <span class="slider round"></span>
@@ -76,15 +120,21 @@
         </div>
         <!-- 2. Gaggiuino URL input -->
         <div class="setting-item">
-          <label for="gaggiuino-url-input">Gaggiuino URL or IP</label>
+          <label for="gaggiuino-url-input" title="Target Gaggiuino URL or IP address">Gaggiuino Address</label>
           <input type="text" id="gaggiuino-url-input" class="settings-input" placeholder="http://gaggiuino.local">
         </div>
         <!-- 3. Max charts input -->
         <div class="setting-item">
-          <label for="max-charts-input">Max Comparison Charts</label>
+          <label for="max-charts-input" title="Maximum number of charts to display.">Max Comparison Charts</label>
           <input type="number" id="max-charts-input" class="settings-input" min="1" max="10">
         </div>
+        <!-- 4. Autoload shots on startup -->
+        <div class="setting-item">
+          <label for="autoload-shots-input" title="Automatically display the most recent shots charts on startup. 0 to disable.">Load Charts on Startup</label>
+          <input type="number" id="autoload-shots-input" class="settings-input" min="0">
+        </div>
       </div>
+      <!-- Settings Panel Footer -->
       <div class="settings-footer">
         <div id="settings-feedback" class="settings-feedback"></div>
         <button id="settings-save-btn" class="settings-save-btn">Save & Close</button>

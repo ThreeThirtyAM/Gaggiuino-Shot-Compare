@@ -16,12 +16,14 @@ This was built for personal use, but is shared here in case it's useful to other
 
 ## Key Features
 
-- 📈 **Compare Multiple Shots:** Display up to 3 shots side-by-side to analyse consistency and the impact of different profiles.
-- 📊 **Interactive Charts:** Plots all key metrics like pressure, flow, temperature, and weight. Toggle data series on/off by clicking the legend.
-- 💻 **Easy for Everyone:** Includes a simple executable for Windows users, no command line needed!
-- 🌐 **Local First:** Runs entirely on your computer and local network. No cloud services or internet connection required (after initial setup).
-- 🔍 **Shot List Filter:** Quickly find shots by filtering the list by profile name.
-- 🎨 **Customisation:** Settings for light or dark interface themes, set target Gaggiuino address and more.
+-  📈 **Compare Multiple Shots:** Display shots side-by-side to analyse consistency and the impact of different profiles.
+-  ⭐ **Save Your Favourites:** Star your 'god shots' and quickly access them in a dedicated view, making them easy to find and select for reference comparisons.
+-  📊 **Interactive Charts:** Plots pressure, flow, temperature, and weight with a synchronized time axis. Toggle data series on/off by clicking the legend.
+-  🔍 **Filter & Find:** Quickly find specific shots by filtering the list by profile name.
+-  🎨 **App Customisation:** Set your Gaggiuino's address, configure the maximum number of charts, and switch between light and dark themes.
+-  🔄 **Live Data & Fast UI:** The 'Recents' button instantly pulls in new shots made while the app is running. The shot list also now pre-fetches in the background for a smooth, responsive feel.
+-  💻 **Easy for Everyone:** Includes a simple executable for Windows users, no installation or command line needed!
+-  🌐 **100% Local:** Runs entirely on your computer and local network. No cloud services or internet connection required.
 
 ## Tech Stack
 
@@ -38,7 +40,7 @@ There are two ways to run this application.
 This is the recommended method for most users on Windows. No installation, no technical setup!
 
 1.  Go to the [**Releases Page**](https://github.com/threethirtyam/gaggiuino-shot-compare/releases).
-2.  Download the latest `.exe` file (e.g., `gsc_v1_1.exe`).
+2.  Download the latest `.exe` file (e.g., `Shot Compare.exe`).
 3.  Double-click the downloaded file to run it. That's it!
 
 ---
@@ -50,6 +52,7 @@ This method is for users who are comfortable with the command line or are not on
 **Prerequisites:**
 -	[Python 3.6+](https://www.python.org/downloads/) installed.
 -	[Git](https://git-scm.com/downloads) installed.
+-	[Chromium Browser] (https://www.chromium.org/developers/how-tos/get-the-code/) installed.
 
 **Instructions:**
 1.  **Clone the repository:**
@@ -75,11 +78,27 @@ This method is for users who are comfortable with the command line or are not on
 		Try navigating to `http://gaggiuino.local` in your web browser. If your machine uses something other than the Gaggiuino default URL, you need to update the app settings.
 		The app can only display shots that have already been saved on the machine's SD card.
 
+## Known Issues
+
+-   **WINDOWS - App cannot survive sleep/wake cycle:** App will fail if left idle during Windows sleep/wake cycle.
+    -   **Reason:** Windows kills WebSockets at sleep and the current app architecture cannot recover.
+    -   **Solution:** No solution exists (AFAIK) to recover automatically from this. An overlay is in place which instructs, please restart app. 🤷
+
+-   **WINDOWS - App cannot persist maximised screen mode:** If the app was running in a maximised window when it was closed, it will restart at maximum possible window resolution, but not in a maximised window!
+    -   **Reason:** No nice way to do this with current app architecture.
+    -   **Solution:** Hit the full screen button!
+
+-   **ALL - Slow loading or loading stops with deleted shots:** The app may appear to hang when loading shots if a large number of consecutive shots have been deleted from the history on the Gaggiuino's SD card (like PZ calibration 'shots'). If a block of more than 25 consecutive shots has been deleted the app will stop loading new shots.
+    -   **Reason:** The app searches for shots sequentially by their ID number. When it encounters a large gap of missing IDs, it must try to fetch each one individually before finding the next available shot, this takes time.
+    -   **Solution:** This is expected behaviour - you may not even notice. For best performance, it's recommended to avoid deleting large contiguous blocks of shots from your history. The number of consecutive shots (default 25) that determine when the app gives up searching for new shots is configurable at build.
+
 ## Project Philosophy
 
 This project started from a simple need: I wanted to compare my espresso shots side-by-side, locally, and couldn't find a readymade solution.
 
-So, I made this. Well truthfully, I wrote some requirements and chat made it. I can't take credit - I just told chat what to do and made sure my requirements were met. But after quite some iterations, it worked out pretty well.
+So, I made this. Well truthfully, I wrote some requirements and chat made it, and after quite some iterations I got what I wanted.
+
+I use this app every day to analyse my shots and learn more about profiling with Gaggiuino. I have built out functionality that makes this task easy for me.
 
 Testing: I made this for me. It is robust in my environment. It's a simple app, but YMMV!
 

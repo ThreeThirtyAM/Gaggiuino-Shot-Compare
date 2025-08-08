@@ -8,7 +8,6 @@
 
 
 /* --- CSS Variables (Theming) --- */
-/* These variables define the color palette for the application. */
 :root {
   /* -- Light Mode Color Palette (Default) -- */
   --sidebar-width: 350px;
@@ -25,7 +24,8 @@
   --danger-color: #e74c3c;
   --icon-hover-color: #333;
   --button-disabled-bg: #95a5a6;
-  --overlay-bg: rgba(0, 0, 0, 0.5); /* MODIFIED: Added overlay bg color */
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+  --favorite-color: #f39c12;
 }
 
 /* When the body has the 'dark-mode' class, these variable values will override the defaults. */
@@ -41,7 +41,7 @@ body.dark-mode {
   --border-light: #343a40;
   --icon-hover-color: #f8f9fa;
   --button-disabled-bg: #5c6769;
-  --overlay-bg: rgba(0, 0, 0, 0.7); /* MODIFIED: Added overlay bg color */
+  --overlay-bg: rgba(0, 0, 0, 0.7);
 }
 
 
@@ -52,42 +52,46 @@ body {
   padding: 0;
   color: var(--text-primary);
   background: var(--background-color);
-  display: flex; /* Use flexbox for the main layout (sidebar | content) */
-  height: 100vh; /* Make the body take up the full viewport height */
-  overflow: hidden; /* Prevent the body itself from scrolling */
-  transition: background-color 0.2s, color 0.2s; /* Smooth theme transitions */
+  display: flex;
+  height: 100vh;
+  overflow: hidden; /* Prevents whole-page scrolling */
+  transition: background-color 0.2s, color 0.2s;
+}
+
+/* Animation for loading indicators */
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 
 /* --- Layout Components --- */
-
 .sidebar {
-  width: var(--sidebar-width); /* Initial width, can be resized */
+  width: var(--sidebar-width);
   background: var(--sidebar-background);
   border-right: 1px solid var(--border-color);
   display: flex;
-  flex-direction: column; /* Stack children vertically */
+  flex-direction: column;
   height: 100vh;
-  min-width: 220px; /* Prevent it from becoming too narrow */
-  flex-shrink: 0; /* Prevent the sidebar from shrinking when window is small */
+  min-width: 220px;
+  flex-shrink: 0; /* Prevents the sidebar from shrinking when window is small */
 }
 
 .resizer {
   width: 5px;
   background: var(--header-background);
-  cursor: col-resize; /* Show the column-resize cursor on hover */
+  cursor: col-resize;
   height: 100vh;
   transition: background 0.2s;
   flex-shrink: 0;
 }
 
 .resizer:hover {
-  background: var(--border-color); /* Highlight on hover */
+  background: var(--border-color);
 }
 
 
 /* --- Sidebar Components --- */
-
 .sidebar-header {
   padding: 15px;
   border-bottom: 1px solid var(--border-light);
@@ -102,7 +106,6 @@ body {
   gap: 10px;
 }
 
-/* MODIFIED: Styles for the Settings Icon Button */
 #settings-btn {
   cursor: pointer;
   display: flex;
@@ -114,13 +117,13 @@ body {
 #settings-btn svg {
   width: 24px;
   height: 24px;
-  fill: var(--text-secondary); /* Use a secondary color for the icon */
-  transition: fill 0.2s, transform 0.3s ease-out; /* Added transform */
+  fill: var(--text-secondary);
+  transition: fill 0.2s, transform 0.3s ease-out;
 }
 
 #settings-btn:hover svg {
-  fill: var(--icon-hover-color); /* Change color on hover */
-  transform: rotate(45deg); /* Spin the gear on hover */
+  fill: var(--icon-hover-color);
+  transform: rotate(45deg);
 }
 
 .search-controls {
@@ -131,9 +134,94 @@ body {
   gap: 5px;
 }
 
+.sidebar-toolbar,
+.filter-view {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  width: 100%;
+}
+
+.toolbar-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: var(--background-color);
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+  color: var(--text-secondary);
+  font-weight: 500;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+  flex-grow: 1; /* Make buttons share space equally */
+}
+
+.toolbar-btn:hover {
+  background-color: var(--header-background);
+  border-color: var(--text-secondary);
+}
+
+.toolbar-btn.active {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: white;
+}
+
+.toolbar-btn.active:hover {
+  background-color: var(--hover-color);
+  border-color: var(--hover-color);
+}
+
+/* Styles for the filter button when a text filter is active. */
+.toolbar-btn.filter-active {
+  color: var(--primary-color); /* Make the icon color stand out */
+}
+
+.toolbar-btn.filter-active:hover {
+  color: var(--hover-color);
+}
+
+/* Styles for the loading state on the refresh button */
+.toolbar-btn.is-loading {
+  pointer-events: none; /* Disable clicks while loading */
+  color: var(--primary-color);
+}
+
+.toolbar-btn.is-loading svg {
+  animation: spin 1s linear infinite;
+}
+
+.toolbar-btn svg {
+  width: 20px;
+  height: 20px;
+  fill: currentColor;
+}
+
+.toolbar-btn.icon-btn {
+  flex-grow: 0; /* Prevent icon-only buttons from growing */
+  padding: 8px;
+}
+
+.toolbar-btn.active svg {
+  fill: white;
+}
+
+.filter-view {
+  gap: 10px;
+}
+
+.filter-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  flex-grow: 1;
+}
+
 #profile-filter {
   width: 100%;
-  box-sizing: border-box; /* Include padding and border in the element's total width */
+  box-sizing: border-box;
   padding: 8px;
   border: 1px solid var(--border-color);
   border-radius: 4px;
@@ -146,24 +234,18 @@ body {
   color: var(--text-secondary);
 }
 
-.filter-container {
-  position: relative; /* Needed for positioning the clear button inside */
-  display: flex;
-  align-items: center;
-}
-
 #clear-filter-btn {
-  position: absolute; /* Position relative to the parent .filter-container */
+  position: absolute;
   right: 8px;
   top: 50%;
-  transform: translateY(-50%); /* Vertically center the button */
+  transform: translateY(-50%);
   background: none;
   border: none;
   color: #999;
   cursor: pointer;
   font-size: 1.4em;
   padding: 0 4px;
-  display: none; /* Hidden by default, shown by JavaScript */
+  display: none; /* Hidden by default, shown via JS */
 }
 
 #clear-filter-btn:hover {
@@ -175,7 +257,7 @@ body {
   font-size: 0.85em;
   text-align: center;
   font-weight: 500;
-  color: var(--danger-color); /* Use a distinct color for feedback/errors */
+  color: var(--danger-color);
 }
 
 .load-more-container {
@@ -205,8 +287,8 @@ body {
 }
 
 .shot-list {
-  flex-grow: 1; /* Allow this element to grow and fill available vertical space */
-  overflow-y: auto; /* Show a scrollbar if the content overflows */
+  flex-grow: 1;
+  overflow-y: auto;
 }
 
 .shot-list .loading {
@@ -217,7 +299,6 @@ body {
 
 
 /* --- Shot List Item Styling --- */
-
 .shot-item {
   display: flex;
   align-items: center;
@@ -268,23 +349,22 @@ body {
 
 
 /* --- Main Content and Charts --- */
-
 .main-content {
-  flex-grow: 1; /* Allow this area to fill the remaining horizontal space */
+  flex-grow: 1;
   overflow-y: auto;
   padding: 10px;
 }
 
 .charts-container {
-  display: grid; /* Use grid layout for the charts */
-  grid-template-columns: 1fr; /* Each chart takes up one full-width column */
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 10px;
 }
 
 .chart-card {
   border: 1px solid var(--border-color);
   border-radius: 8px;
-  overflow: hidden; /* Ensures content respects the border-radius */
+  overflow: hidden;
   background: var(--card-background);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
@@ -292,11 +372,19 @@ body {
 .chart-header {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   padding: 8px 12px;
   background: var(--header-background);
   border-bottom: 1px solid var(--border-light);
   gap: 10px;
-  flex-wrap: wrap; /* Allow items to wrap to the next line on small screens */
+  flex-wrap: wrap; /* Allows header items to wrap on smaller screens */
+}
+
+.chart-header-left,
+.chart-header-right {
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .chart-header .shot-id {
@@ -312,11 +400,40 @@ body {
 .chart-header .shot-date {
   color: var(--text-secondary);
   font-size: 0.85em;
-  margin-left: auto; /* Pushes the date to the far right */
+}
+
+.favorite-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  color: var(--text-secondary);
+  transition: color 0.2s, transform 0.2s;
+}
+
+.favorite-btn:hover {
+  color: var(--favorite-color);
+  transform: scale(1.15);
+}
+
+.favorite-btn svg {
+  width: 20px;
+  height: 20px;
+  stroke: currentColor;
+  fill: none; /* Outline is drawn by stroke */
+}
+
+.favorite-btn.is-favorite {
+  color: var(--favorite-color);
+}
+
+.favorite-btn.is-favorite svg {
+  fill: currentColor; /* Fill the star when it's a favorite */
 }
 
 .close-btn {
-  margin-left: 10px;
   background: none;
   border: none;
   color: #999;
@@ -336,28 +453,26 @@ body {
 
 
 /* --- Custom Scrollbar Styling for Dark Mode --- */
-/* This targets WebKit browsers (Chrome, Edge, Safari) for a better dark mode experience. */
-
 body.dark-mode ::-webkit-scrollbar {
   width: 12px;
 }
 
 body.dark-mode ::-webkit-scrollbar-track {
-  background: var(--sidebar-background); /* Dark background for the scrollbar track */
+  background: var(--sidebar-background);
 }
 
 body.dark-mode ::-webkit-scrollbar-thumb {
-  background-color: var(--border-color); /* A lighter gray for the draggable part */
+  background-color: var(--border-color);
   border-radius: 6px;
-  border: 3px solid var(--sidebar-background); /* Creates a padding effect around the thumb */
+  border: 3px solid var(--sidebar-background); /* Creates a padding effect */
 }
 
 body.dark-mode ::-webkit-scrollbar-thumb:hover {
-  background-color: var(--text-secondary); /* Make it slightly brighter on hover */
+  background-color: var(--text-secondary);
 }
 
 
-/* --- MODIFIED: Settings Overlay Styles --- */
+/* --- Settings Overlay Styles --- */
 .settings-overlay {
   position: fixed;
   top: 0;
@@ -384,7 +499,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   border-radius: 8px;
   width: 100%;
   max-width: 450px;
-  box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
 }
@@ -426,7 +541,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   border: 1px solid var(--border-color);
   background: var(--background-color);
   color: var(--text-primary);
-  width: 180px; /* Give inputs a fixed width */
+  width: 180px;
   font-size: 0.9em;
 }
 
@@ -434,7 +549,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   padding: 15px 20px;
   border-top: 1px solid var(--border-light);
   display: flex;
-  justify-content: flex-end; /* Align button to the right */
+  justify-content: flex-end;
   align-items: center;
   gap: 15px;
 }
@@ -442,7 +557,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
 .settings-feedback {
   font-size: 0.9em;
   color: var(--primary-color);
-  flex-grow: 1; /* Takes up remaining space */
+  flex-grow: 1;
 }
 
 .settings-save-btn {
@@ -470,7 +585,7 @@ body.dark-mode ::-webkit-scrollbar-thumb:hover {
   height: 28px;
 }
 
-.switch input { 
+.switch input {
   opacity: 0;
   width: 0;
   height: 0;

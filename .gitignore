@@ -14,3 +14,5 @@ build/
 dist/
 assets/
 *.spec
+*.bat
+*.json
