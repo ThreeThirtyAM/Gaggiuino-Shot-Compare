@@ -52,7 +52,6 @@ This method is for users who are comfortable with the command line or are not on
 **Prerequisites:**
 -	[Python 3.6+](https://www.python.org/downloads/) installed.
 -	[Git](https://git-scm.com/downloads) installed.
--	[Chromium Browser] (https://www.chromium.org/developers/how-tos/get-the-code/) installed.
 
 **Instructions:**
 1.  **Clone the repository:**
@@ -83,10 +82,6 @@ This method is for users who are comfortable with the command line or are not on
 -   **WINDOWS - App cannot survive sleep/wake cycle:** App will fail if left idle during Windows sleep/wake cycle.
     -   **Reason:** Windows kills WebSockets at sleep and the current app architecture cannot recover.
     -   **Solution:** No solution exists (AFAIK) to recover automatically from this. An overlay is in place which instructs, please restart app. 🤷
-
--   **WINDOWS - App cannot persist maximised screen mode:** If the app was running in a maximised window when it was closed, it will restart at maximum possible window resolution, but not in a maximised window!
-    -   **Reason:** No nice way to do this with current app architecture.
-    -   **Solution:** Hit the full screen button!
 
 -   **ALL - Slow loading or loading stops with deleted shots:** The app may appear to hang when loading shots if a large number of consecutive shots have been deleted from the history on the Gaggiuino's SD card (like PZ calibration 'shots'). If a block of more than 25 consecutive shots has been deleted the app will stop loading new shots.
     -   **Reason:** The app searches for shots sequentially by their ID number. When it encounters a large gap of missing IDs, it must try to fetch each one individually before finding the next available shot, this takes time.
