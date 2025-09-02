@@ -10,7 +10,43 @@
 import eel
 import requests
 import threading
+import json
+import os
 from datetime import datetime
+from pathlib import Path
+
+# --- Persistent Settings Management ---
+def get_settings_path():
+    """Return the path to the user settings JSON file."""
+    if os.name == "nt":  # Windows
+        base_dir = Path(os.getenv("APPDATA", Path.home()))
+    else:  # Linux/Mac
+        base_dir = Path.home() / ".config"
+    settings_dir = base_dir / "GaggiuinoShotCompare"
+    settings_dir.mkdir(parents=True, exist_ok=True)
+    return settings_dir / "settings.json"
+
+def load_settings():
+    """Load settings JSON from disk."""
+    path = get_settings_path()
+    if path.exists():
+        try:
+            with open(path, "r", encoding="utf-8") as f:
+                return json.load(f)
+        except Exception as e:
+            print(f"Error loading settings file: {e}")
+    return {}  # defaults if missing or invalid
+
+def save_settings(data):
+    """Save settings JSON to disk."""
+    path = get_settings_path()
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump(data, f, indent=2)
+        return True
+    except Exception as e:
+        print(f"Error saving settings file: {e}")
+        return False
 
 # --- Configuration & Setup ---
 
@@ -185,6 +221,16 @@ def _fetch_shots_worker(start_id, num_to_fetch):
 
 # --- Eel Exposed Functions ---
 # These functions are callable directly from the JavaScript frontend.
+
+@eel.expose
+def load_user_settings():
+    """Load application settings to persistent storage"""
+    return load_settings()
+
+@eel.expose
+def save_user_settings(data):
+    """Save application settings to persistent storage"""
+    return save_settings(data)
 
 @eel.expose
 def ping():

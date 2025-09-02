@@ -50,7 +50,7 @@ let debounceTimeout;                	// Timeout for debounced operations
  * It sets up the UI, loads settings, and then fetches initial data.
  */
 document.addEventListener('DOMContentLoaded', async () => {
-    initializeUi();
+    await initializeUi();
     // Await the autoload function to display charts first for faster perceived startup.
     await performAutoload();
     // Now load the sidebar list, which will correctly reflect any autoloaded shots.
@@ -61,8 +61,8 @@ document.addEventListener('DOMContentLoaded', async () => {
  * Sets up the initial state of the application UI and backend connection.
  */
 async function initializeUi() {
-    loadSettings();
-    loadFavorites();
+    await loadSettings();   // make sure settings are loaded first
+    await loadFavorites();  // favorites also need async
     initializeTheme();
     setupEventListeners();
     startKeepAlive(); // Start the heartbeat to prevent disconnection.
@@ -159,12 +159,22 @@ function showFatalConnectionErrorOverlay() {
 /**
  * Loads all user settings from localStorage into global variables.
  */
-function loadSettings() {
-    const savedTheme = localStorage.getItem('theme') || 'light';
-    gaggiuinoUrl = localStorage.getItem('gaggiuinoUrl') || 'http://gaggiuino.local';
-    maxCharts = parseInt(localStorage.getItem('maxCharts'), 10) || 3;
-    autoloadRecentShots = parseInt(localStorage.getItem('autoloadRecentShots'), 10) || 2;
-    setTheme(savedTheme);
+async function loadSettings() {
+    try {
+        const settings = await eel.load_user_settings()();
+        const savedTheme = settings.theme || 'light';
+        gaggiuinoUrl = settings.gaggiuinoUrl || 'http://gaggiuino.local';
+        maxCharts = parseInt(settings.maxCharts, 10) || 3;
+        autoloadRecentShots = parseInt(settings.autoloadRecentShots, 10) || 2;
+        setTheme(savedTheme);
+    } catch (e) {
+        console.error("Failed to load user settings:", e);
+        // fallback to defaults
+        gaggiuinoUrl = 'http://gaggiuino.local';
+        maxCharts = 3;
+        autoloadRecentShots = 2;
+        setTheme('light');
+    }
 }
 
 /**
@@ -211,9 +221,13 @@ async function saveSettings() {
     if (newAutoload > maxCharts) newAutoload = maxCharts;
     autoloadRecentShots = newAutoload;
 
-    localStorage.setItem('gaggiuinoUrl', gaggiuinoUrl);
-    localStorage.setItem('maxCharts', maxCharts);
-    localStorage.setItem('autoloadRecentShots', autoloadRecentShots);
+    await eel.save_user_settings({
+		theme: newTheme,
+		gaggiuinoUrl: gaggiuinoUrl,
+		maxCharts: maxCharts,
+		autoloadRecentShots: autoloadRecentShots,
+		favoriteShots: favoriteShots
+	})();
 
     renderCharts(); // Re-render to respect new maxCharts limit.
 
@@ -314,15 +328,17 @@ async function performAutoload() {
 // --- Favorites Management ---
 
 /**
- * Loads favorite shots from localStorage into the `favoriteShots` array.
+ * Loads favorite shots from user local storage json into the `favoriteShots` array.
  */
-function loadFavorites() {
+async function loadFavorites() {
     try {
-        const savedFavorites = localStorage.getItem('favoriteShots');
-        if (savedFavorites) {
-            favoriteShots = JSON.parse(savedFavorites);
+        const settings = await eel.load_user_settings()();
+        if (settings.favoriteShots) {
+            favoriteShots = settings.favoriteShots;
             // Sort favorites by ID descending to ensure a consistent order.
             favoriteShots.sort((a, b) => b.id - a.id);
+        } else {
+            favoriteShots = [];
         }
     } catch (e) {
         console.error("Could not load favorites:", e);
@@ -331,14 +347,21 @@ function loadFavorites() {
 }
 
 /**
- * Saves the current `favoriteShots` array to localStorage.
+ * Saves the current `favoriteShots` array to user local storage json.
  */
-function saveFavorites() {
-    localStorage.setItem('favoriteShots', JSON.stringify(favoriteShots));
+async function saveFavorites() {
+    try {
+        // Reload current settings first
+        const settings = await eel.load_user_settings()();
+        settings.favoriteShots = favoriteShots;
+        await eel.save_user_settings(settings)();
+    } catch (e) {
+        console.error("Failed to save favorites:", e);
+    }
 }
 
 /**
- * Toggles a shot's favorite status, updating the state and UI.
+ * Toggles a shot's favorite status, updating the state, UI, and saving to disk.
  * @param {number} shotId - The ID of the shot to toggle.
  */
 async function toggleFavoriteStatus(shotId) {
@@ -358,8 +381,7 @@ async function toggleFavoriteStatus(shotId) {
                 duration_formatted: shotSummary.duration_formatted
             });
         } else {
-            // As a fallback, if the shot isn't in the history (e.g., it was only autoloaded),
-            // we can still get summary info from the full shot data in the `shots` array.
+            // As a fallback, check if we have the full shot data in `shots`.
             const shotData = shots.find(s => s.id === shotId);
             if (shotData) {
                 favoriteShots.push({
@@ -375,14 +397,16 @@ async function toggleFavoriteStatus(shotId) {
                 return;
             }
         }
-        // Re-sort the array to maintain descending order by shot ID.
+        // Keep list sorted newest-first.
         favoriteShots.sort((a, b) => b.id - a.id);
     }
 
-    saveFavorites();
-    renderCharts(); // Re-render charts to update the star icon.
+    // Persist updated favorites to disk
+    await saveFavorites();
+
+    renderCharts(); // Update the star icons
     if (currentSidebarView === 'favorites') {
-        applyFilterAndRender(); // Re-render list if on the favorites view.
+        applyFilterAndRender(); // Refresh sidebar if in favorites view
     }
 }
 
